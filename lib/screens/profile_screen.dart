@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:messenger/components/rounded_button.dart';
 import 'package:messenger/components/user_info.dart';
+import 'package:messenger/screens/chat_screen.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
 FirebaseUser loggedInUser;
@@ -150,6 +151,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 profileImageUrl: profileImage,
                                 status: status,
                                 username: name,
+                                uid: uid,
                               ),
                               Expanded(
                                 child: Column(
@@ -258,9 +260,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           ? null
                                           : () {
                                               // await statusUpdateDialog(context);
-                                              print(
-                                                  'friend since: $friendSince');
-                                              print('req type $requestType');
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      new ChatScreen(uid),
+                                                ),
+                                              );
                                             },
                                     ),
                                   ],

@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 
 class UserInformation extends StatelessWidget {
   const UserInformation(
-      {this.profileImageUrl, this.status, this.username, this.color});
+      {this.profileImageUrl, this.status, this.username, this.color, this.uid});
 
   final String username;
   final String status;
   final String profileImageUrl;
   final Color color;
+  final String uid;
 
   @override
   Widget build(BuildContext context) {
@@ -21,11 +22,14 @@ class UserInformation extends StatelessWidget {
               expandProfileImage(context);
             }
           },
-          child: CircleAvatar(
-            radius: 100.0,
-            backgroundImage: profileImageUrl == null
-                ? AssetImage('images/avatar_male.png')
-                : NetworkImage(profileImageUrl),
+          child: Hero(
+            tag: uid,
+            child: CircleAvatar(
+              radius: 100.0,
+              backgroundImage: profileImageUrl == null
+                  ? AssetImage('images/avatar_male.png')
+                  : NetworkImage(profileImageUrl),
+            ),
           ),
         ),
         SizedBox(height: 20.0),

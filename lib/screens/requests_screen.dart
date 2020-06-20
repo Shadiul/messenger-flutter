@@ -92,6 +92,7 @@ class FriendsCard extends StatelessWidget {
           userName: userName,
           profileImage: profileImage,
           status: status,
+          uid: uid,
           onPressed: () {
             Navigator.push(
               context,

@@ -6,12 +6,14 @@ class UserListCard extends StatelessWidget {
       this.profileImage,
       this.status,
       this.userName,
-      this.active});
+      this.active,
+      this.uid});
   final Function onPressed;
   final String profileImage;
   final String userName;
   final String status;
   final bool active;
+  final String uid;
 
   @override
   Widget build(BuildContext context) {
@@ -26,16 +28,19 @@ class UserListCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            CircleAvatar(
-              radius: 35.0,
-              backgroundColor: active != null && active
-                  ? Colors.green.shade400
-                  : Colors.grey,
+            Hero(
+              tag: uid,
               child: CircleAvatar(
-                radius: active != null && active ? 30.0 : 35.0,
-                backgroundImage: profileImage == null
-                    ? AssetImage('images/avatar_male.png')
-                    : NetworkImage(profileImage),
+                radius: 35.0,
+                backgroundColor: active != null && active
+                    ? Colors.green.shade400
+                    : Colors.grey,
+                child: CircleAvatar(
+                  radius: active != null && active ? 30.0 : 35.0,
+                  backgroundImage: profileImage == null
+                      ? AssetImage('images/avatar_male.png')
+                      : NetworkImage(profileImage),
+                ),
               ),
             ),
             Padding(

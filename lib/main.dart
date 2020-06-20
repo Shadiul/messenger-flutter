@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:messenger/screens/friends.dart';
+import 'package:messenger/screens/chat_screen.dart';
 import 'package:messenger/screens/login_screen.dart';
 import 'package:messenger/screens/main_screen.dart';
-import 'package:messenger/screens/profile_screen.dart';
 import 'package:messenger/screens/registration_screen.dart';
 import 'package:messenger/screens/settings_screen.dart';
 import 'package:messenger/screens/splash_screen.dart';
@@ -44,7 +43,7 @@ class _MyAppState extends State<MyApp> {
           MainScreen.id: (context) => MainScreen(),
           SettingsScreen.id: (context) => SettingsScreen(),
           AllUsersScreen.id: (context) => AllUsersScreen(),
-          // ProfileScreen.id: (context) => ProfileScreen(),
+          // ChatScreen.id: (context) => ChatScreen(),
         });
   }
 }

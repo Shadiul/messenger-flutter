@@ -106,6 +106,7 @@ class UserCard extends StatelessWidget {
       userName: name,
       profileImage: profileImage,
       status: status,
+      uid: uid,
       onPressed: () {
         Navigator.push(
           context,

@@ -79,8 +79,6 @@ class UsersStream extends StatelessWidget {
               .child(loggedInUser.uid)
               .set({'active': true});
 
-          print(loggedInUser.displayName);
-
           final friends = snapshot.data.documents;
 
           List<FriendsCard> friendsCards = [];
@@ -149,6 +147,7 @@ class _FriendsCardState extends State<FriendsCard> {
           profileImage: profileImage,
           status: status,
           active: active,
+          uid: uid,
           onPressed: () {
             Navigator.push(
               context,
