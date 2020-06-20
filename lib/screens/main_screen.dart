@@ -8,6 +8,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:messenger/screens/all_users_screen.dart';
+import 'package:messenger/screens/chat_list.dart';
+import 'package:messenger/screens/chat_screen.dart';
 import 'package:messenger/screens/profile_screen.dart';
 import 'package:messenger/screens/settings_screen.dart';
 import 'package:messenger/screens/welcome_screen.dart';
@@ -220,14 +222,8 @@ class _MainScreenState extends State<MainScreen> {
             //Chat Screen
             Container(
               child: Center(
-                child: Text(
-                  'Chats',
-                  style: TextStyle(
-                    fontFamily: 'raleway',
-                    fontSize: 50.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey.shade800,
-                  ),
+                child: Scaffold(
+                  body: ChatList(),
                 ),
               ),
             ),

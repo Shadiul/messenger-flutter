@@ -218,6 +218,24 @@ class _ChatScreenState extends State<ChatScreen> {
                           'sender id': loggedInUser.uid,
                           'timestamp': FieldValue.serverTimestamp()
                         });
+                        _firestore
+                            .collection('Messages')
+                            .document(loggedInUser.uid)
+                            .collection('Conversations')
+                            .document(widget.receiverID)
+                            .setData({
+                          'timestamp': FieldValue.serverTimestamp(),
+                          'last message': messageText,
+                        });
+                        _firestore
+                            .collection('Messages')
+                            .document(widget.receiverID)
+                            .collection('Conversations')
+                            .document(loggedInUser.uid)
+                            .setData({
+                          'timestamp': FieldValue.serverTimestamp(),
+                          'last message': messageText,
+                        });
                       }
                       messageText = null;
                     },

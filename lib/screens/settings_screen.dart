@@ -153,6 +153,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     username: _userName,
                     status: _userStatus,
                     color: Colors.black87,
+                    uid: loggedInUser.uid,
                   ),
                   Expanded(
                     child: Column(

@@ -62,7 +62,7 @@ class UsersStream extends StatelessWidget {
           }
           return Expanded(
             child: ListView(
-              padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+              padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 0.0),
               children: friendsCards,
             ),
           );

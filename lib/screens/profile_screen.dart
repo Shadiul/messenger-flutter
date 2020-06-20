@@ -5,7 +5,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:messenger/components/rounded_button.dart';
 import 'package:messenger/components/user_info.dart';
 import 'package:messenger/screens/chat_screen.dart';
-import 'package:progress_dialog/progress_dialog.dart';
 
 FirebaseUser loggedInUser;
 
@@ -20,8 +19,8 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final String uid;
   _ProfileScreenState(this.uid);
+  final String uid;
   Timestamp friendSince;
   String requestType = '';
   String titleText = '';

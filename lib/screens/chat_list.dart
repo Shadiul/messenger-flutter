@@ -1,56 +1,78 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:messenger/screens/profile_screen.dart';
 import 'package:messenger/components/user_list_card.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'package:messenger/screens/chat_screen.dart';
 
-final _fireStore = Firestore.instance;
-var _firebaseRef = FirebaseDatabase();
+final _firestore = Firestore.instance;
+var _database = FirebaseDatabase();
+FirebaseAuth _auth = FirebaseAuth.instance;
+FirebaseUser loggedInUser;
 
-class FriendsList extends StatefulWidget {
-  static const String id = 'friends_screen';
-  final FirebaseUser user;
-  FriendsList(this.user);
+class ChatList extends StatefulWidget {
   @override
-  _FriendsListState createState() => _FriendsListState(user);
+  _ChatListState createState() => _ChatListState();
 }
 
-class _FriendsListState extends State<FriendsList> {
-  _FriendsListState(this.user);
-  final FirebaseUser user;
+class _ChatListState extends State<ChatList> {
+  Future<void> getCurrentUser() async {
+    try {
+      final user = await _auth.currentUser();
+      if (user != null) {
+        setState(() {
+          loggedInUser = user;
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   void initState() {
     super.initState();
+    getCurrentUser();
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          UsersStream(
-            loggedInUser: user,
-          )
+          loggedInUser != null
+              ? ConversationsStream()
+              : Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    children: <Widget>[
+                      SpinKitDoubleBounce(
+                        color: Colors.indigo,
+                      ),
+                    ],
+                  ),
+                ),
+          // Expanded(
+          //   child: Center(),
+          // ),
         ],
       ),
     );
   }
 }
 
-class UsersStream extends StatelessWidget {
-  const UsersStream({this.loggedInUser});
-  final FirebaseUser loggedInUser;
-
+class ConversationsStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: _fireStore
-          .collection('Friends')
+      stream: _firestore
+          .collection('Messages')
           .document(loggedInUser.uid)
-          .collection('friend')
+          .collection('Conversations')
+          .orderBy('timestamp', descending: true)
           .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
@@ -67,31 +89,35 @@ class UsersStream extends StatelessWidget {
           );
         }
 
-        _firebaseRef
+        print(snapshot.data.documents);
+
+        _database
             .reference()
             .child('Users')
             .child(loggedInUser.uid)
             .onDisconnect()
             .set({'active': false});
-        _firebaseRef
+        _database
             .reference()
             .child('Users')
             .child(loggedInUser.uid)
             .set({'active': true});
 
-        final friends = snapshot.data.documents;
+        final conversations = snapshot.data.documents;
 
-        List<FriendsCard> friendsCards = [];
+        List<ConversationsCard> conversationsCards = [];
 
-        for (var friend in friends) {
-          final uid = friend.documentID;
-          final friendsCard = FriendsCard(uid);
-          friendsCards.add(friendsCard);
+        for (var conversation in conversations) {
+          final uid = conversation.documentID;
+          final lastMessage = conversation.data['last message'];
+
+          final conversationCard = ConversationsCard(uid, lastMessage);
+          conversationsCards.add(conversationCard);
         }
         return Expanded(
           child: ListView(
             padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 0.0),
-            children: friendsCards,
+            children: conversationsCards,
           ),
         );
       },
@@ -99,18 +125,18 @@ class UsersStream extends StatelessWidget {
   }
 }
 
-class FriendsCard extends StatefulWidget {
+class ConversationsCard extends StatefulWidget {
+  ConversationsCard(this.uid, this.lastMessage);
   final String uid;
-  FriendsCard(this.uid);
-
+  final String lastMessage;
   @override
-  _FriendsCardState createState() => _FriendsCardState();
+  _ConversationsCardState createState() => _ConversationsCardState();
 }
 
-class _FriendsCardState extends State<FriendsCard> {
+class _ConversationsCardState extends State<ConversationsCard> {
   bool active;
   void checkActive(uid) {
-    _firebaseRef
+    _database
         .reference()
         .child('Users')
         .child(uid)
@@ -128,7 +154,7 @@ class _FriendsCardState extends State<FriendsCard> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<DocumentSnapshot>(
-      stream: _fireStore.collection('Users').document(widget.uid).snapshots(),
+      stream: _firestore.collection('Users').document(widget.uid).snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center();
@@ -138,21 +164,21 @@ class _FriendsCardState extends State<FriendsCard> {
 
         final userName = user['name'];
         final profileImage = user['profile'];
-        final status = user['status'];
+        // final status = user['status'];
         final uid = user['user_id'];
         checkActive(uid);
 
         return UserListCard(
           userName: userName,
           profileImage: profileImage,
-          status: status,
+          status: widget.lastMessage,
           active: active,
           uid: uid,
           onPressed: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => new ProfileScreen(uid),
+                builder: (context) => new ChatScreen(uid),
               ),
             );
           },
