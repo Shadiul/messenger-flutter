@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:messenger/screens/profile_screen.dart';
 import 'package:messenger/components/user_list_card.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 final _fireStore = Firestore.instance;
+var _firebaseRef = FirebaseDatabase();
 
 class FriendsList extends StatefulWidget {
   static const String id = 'friends_screen';
@@ -65,6 +67,20 @@ class UsersStream extends StatelessWidget {
             );
           }
 
+          _firebaseRef
+              .reference()
+              .child('Users')
+              .child(loggedInUser.uid)
+              .onDisconnect()
+              .set({'active': false});
+          _firebaseRef
+              .reference()
+              .child('Users')
+              .child(loggedInUser.uid)
+              .set({'active': true});
+
+          print(loggedInUser.displayName);
+
           final friends = snapshot.data.documents;
 
           List<FriendsCard> friendsCards = [];
@@ -84,28 +100,55 @@ class UsersStream extends StatelessWidget {
   }
 }
 
-class FriendsCard extends StatelessWidget {
+class FriendsCard extends StatefulWidget {
   final String uid;
   FriendsCard(this.uid);
+
+  @override
+  _FriendsCardState createState() => _FriendsCardState();
+}
+
+class _FriendsCardState extends State<FriendsCard> {
+  bool active;
+  void checkActive(uid) {
+    _firebaseRef
+        .reference()
+        .child('Users')
+        .child(uid)
+        .child('active')
+        .onValue
+        .listen((event) {
+      if (this.mounted) {
+        setState(() {
+          active = event.snapshot.value;
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<DocumentSnapshot>(
-      stream: _fireStore.collection('Users').document(uid).snapshots(),
+      stream: _fireStore.collection('Users').document(widget.uid).snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center();
         }
+
         final user = snapshot.data;
 
         final userName = user['name'];
         final profileImage = user['profile'];
         final status = user['status'];
         final uid = user['user_id'];
+        checkActive(uid);
+        // print(active);
 
         return UserListCard(
           userName: userName,
           profileImage: profileImage,
           status: status,
+          active: active,
           onPressed: () {
             Navigator.push(
               context,

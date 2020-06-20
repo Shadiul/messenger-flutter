@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,8 @@ import 'package:messenger/screens/requests_screen.dart';
 FirebaseUser loggedInUser;
 final _auth = FirebaseAuth.instance;
 Firestore _firestore = Firestore.instance;
+
+DatabaseReference _firebaseRef;
 
 class MainScreen extends StatefulWidget {
   static const String id = 'main_screen';

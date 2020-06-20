@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 
 class UserListCard extends StatelessWidget {
-  UserListCard({this.onPressed, this.profileImage, this.status, this.userName});
+  UserListCard(
+      {this.onPressed,
+      this.profileImage,
+      this.status,
+      this.userName,
+      this.active});
   final Function onPressed;
   final String profileImage;
   final String userName;
   final String status;
+  final bool active;
 
   @override
   Widget build(BuildContext context) {
+    // print(active);
     return FlatButton(
       splashColor: Colors.indigo.shade100,
       padding: EdgeInsets.all(5.0),
@@ -21,9 +28,15 @@ class UserListCard extends StatelessWidget {
           children: <Widget>[
             CircleAvatar(
               radius: 35.0,
-              backgroundImage: profileImage == null
-                  ? AssetImage('images/avatar_male.png')
-                  : NetworkImage(profileImage),
+              backgroundColor: active != null && active
+                  ? Colors.green.shade400
+                  : Colors.grey,
+              child: CircleAvatar(
+                radius: active != null && active ? 30.0 : 35.0,
+                backgroundImage: profileImage == null
+                    ? AssetImage('images/avatar_male.png')
+                    : NetworkImage(profileImage),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 15.0, top: 8.0, bottom: 5.0),
