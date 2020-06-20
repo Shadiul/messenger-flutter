@@ -1,13 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:messenger/components/rounded_button.dart';
 import 'package:messenger/components/user_info.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 
 FirebaseUser loggedInUser;
-
-final FirebaseMessaging _fcm = FirebaseMessaging();
 
 class ProfileScreen extends StatefulWidget {
   ProfileScreen(this.uid);
@@ -57,9 +56,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       stream: _firestore.collection('Users').document(uid).snapshots(),
       builder: (context, sanpshot) {
         if (!sanpshot.hasData) {
-          return Center(
-            child: CircularProgressIndicator(
-              backgroundColor: Colors.indigo,
+          return Scaffold(
+            backgroundColor: Colors.white,
+            body: SpinKitDoubleBounce(
+              color: Colors.indigo,
             ),
           );
         }
@@ -79,9 +79,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             builder: (context, sanpshot) {
               if (!sanpshot.hasData) {
                 friendSince = null;
-                return Center(
-                  child: CircularProgressIndicator(
-                    backgroundColor: Colors.indigo,
+                return Scaffold(
+                  backgroundColor: Colors.white,
+                  body: SpinKitDoubleBounce(
+                    color: Colors.indigo,
                   ),
                 );
               }
@@ -103,9 +104,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   builder: (context, sanpshot) {
                     if (!sanpshot.hasData) {
                       requestType = 'null';
-                      return Center(
-                        child: CircularProgressIndicator(
-                          backgroundColor: Colors.indigo,
+                      return Scaffold(
+                        backgroundColor: Colors.white,
+                        body: SpinKitDoubleBounce(
+                          color: Colors.indigo,
                         ),
                       );
                     }

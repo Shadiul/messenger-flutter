@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:messenger/screens/profile_screen.dart';
+import 'package:messenger/components/user_list_card.dart';
 
 final _fireStore = Firestore.instance;
 FirebaseUser loggedInUser;
@@ -36,6 +38,7 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text('All Users'),
         backgroundColor: Colors.indigo,
       ),
       body: SafeArea(
@@ -60,10 +63,8 @@ class UsersStream extends StatelessWidget {
         stream: _fireStore.collection('Users').snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return Center(
-              child: CircularProgressIndicator(
-                backgroundColor: Colors.lightBlueAccent,
-              ),
+            return SpinKitDoubleBounce(
+              color: Colors.indigo,
             );
           }
           final users = snapshot.data.documents;
@@ -101,8 +102,10 @@ class UserCard extends StatelessWidget {
   final String uid;
   @override
   Widget build(BuildContext context) {
-    return FlatButton(
-      padding: EdgeInsets.all(0),
+    return UserListCard(
+      userName: name,
+      profileImage: profileImage,
+      status: status,
       onPressed: () {
         Navigator.push(
           context,
@@ -111,46 +114,6 @@ class UserCard extends StatelessWidget {
           ),
         );
       },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 5.0),
-        child: Row(
-          children: <Widget>[
-            Container(
-              child: CircleAvatar(
-                radius: 30.0,
-                backgroundImage: profileImage == null
-                    ? AssetImage('images/avatar_male.png')
-                    : NetworkImage(profileImage),
-              ),
-            ),
-            SizedBox(
-              width: 15.0,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  child: Text(
-                    name,
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                Container(
-                  child: Text(
-                    status,
-                    style: TextStyle(
-                      fontSize: 14.0,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

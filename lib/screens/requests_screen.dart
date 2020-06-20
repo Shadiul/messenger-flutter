@@ -2,28 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:messenger/screens/profile_screen.dart';
 import 'package:messenger/components/user_list_card.dart';
+import 'package:messenger/screens/profile_screen.dart';
 
 final _fireStore = Firestore.instance;
 
-class FriendsList extends StatefulWidget {
-  static const String id = 'friends_screen';
+class RequestsScreen extends StatelessWidget {
   final FirebaseUser user;
-  FriendsList(this.user);
-  @override
-  _FriendsListState createState() => _FriendsListState(user);
-}
-
-class _FriendsListState extends State<FriendsList> {
-  final FirebaseUser user;
-  _FriendsListState(this.user);
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
+  RequestsScreen(this.user);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -46,9 +32,9 @@ class UsersStream extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
         stream: _fireStore
-            .collection('Friends')
+            .collection('Requests')
             .document(loggedInUser.uid)
-            .collection('friend')
+            .collection('requests')
             .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {

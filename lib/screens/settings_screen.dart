@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:messenger/components/rounded_button.dart';
@@ -118,9 +119,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
           _firestore.collection('Users').document(loggedInUser.uid).snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return Center(
-            child: CircularProgressIndicator(
-              backgroundColor: Colors.indigo,
+          return Scaffold(
+            backgroundColor: Colors.white,
+            body: SpinKitDoubleBounce(
+              color: Colors.indigo,
             ),
           );
         }
@@ -199,16 +201,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 TextField(
+                  keyboardType: TextInputType.text,
                   controller: TextEditingController(text: _userStatus),
                   maxLength: 100,
                   maxLines: null,
                   onChanged: (value) {
                     _userStatus = value;
                   },
+                  onSubmitted: (value) async {
+                    _firestore
+                        .collection('Users')
+                        .document(loggedInUser.uid)
+                        .updateData({'status': _userStatus});
+
+                    setState(() {
+                      Navigator.pop(context);
+                    });
+                  },
                 ),
                 RoundedButton(
+                  padding: 0.0,
                   title: 'Update',
                   color: Colors.indigo,
                   onPressed: () async {

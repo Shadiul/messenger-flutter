@@ -11,6 +11,7 @@ import 'package:messenger/screens/profile_screen.dart';
 import 'package:messenger/screens/settings_screen.dart';
 import 'package:messenger/screens/welcome_screen.dart';
 import 'package:messenger/screens/friends.dart';
+import 'package:messenger/screens/requests_screen.dart';
 
 FirebaseUser loggedInUser;
 final _auth = FirebaseAuth.instance;
@@ -208,14 +209,8 @@ class _MainScreenState extends State<MainScreen> {
           body: TabBarView(children: [
             Container(
               child: Center(
-                child: Text(
-                  'Requests',
-                  style: TextStyle(
-                    fontFamily: 'raleway',
-                    fontSize: 50.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey.shade800,
-                  ),
+                child: Scaffold(
+                  body: RequestsScreen(loggedInUser),
                 ),
               ),
             ),
@@ -235,9 +230,10 @@ class _MainScreenState extends State<MainScreen> {
             ),
             Container(
               child: Center(
-                  child: Scaffold(
-                body: FriendsList(loggedInUser),
-              )),
+                child: Scaffold(
+                  body: FriendsList(loggedInUser),
+                ),
+              ),
             ),
           ]),
         ),

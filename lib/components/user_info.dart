@@ -15,11 +15,18 @@ class UserInformation extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        CircleAvatar(
-          radius: 100.0,
-          backgroundImage: profileImageUrl == null
-              ? AssetImage('images/avatar_male.png')
-              : NetworkImage(profileImageUrl),
+        GestureDetector(
+          onTap: () {
+            if (profileImageUrl != null) {
+              expandProfileImage(context);
+            }
+          },
+          child: CircleAvatar(
+            radius: 100.0,
+            backgroundImage: profileImageUrl == null
+                ? AssetImage('images/avatar_male.png')
+                : NetworkImage(profileImageUrl),
+          ),
         ),
         SizedBox(height: 20.0),
         Padding(
@@ -50,5 +57,35 @@ class UserInformation extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  Future expandProfileImage(BuildContext context) {
+    return showGeneralDialog(
+        barrierColor: Colors.black.withOpacity(0.5),
+        transitionBuilder: (context, a1, a2, widget) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(
+                height: 50.0,
+              ),
+              Transform.scale(
+                scale: a1.value,
+                child: Opacity(
+                  opacity: a1.value,
+                  child: AlertDialog(
+                    contentPadding: EdgeInsets.all(0),
+                    content: Image(image: NetworkImage(profileImageUrl)),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+        transitionDuration: Duration(milliseconds: 200),
+        barrierDismissible: true,
+        barrierLabel: '',
+        context: context,
+        pageBuilder: (context, a1, a2) {});
   }
 }
