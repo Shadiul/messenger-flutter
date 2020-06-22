@@ -90,6 +90,8 @@ class UserInformation extends StatelessWidget {
         barrierDismissible: true,
         barrierLabel: '',
         context: context,
-        pageBuilder: (context, a1, a2) {});
+        pageBuilder: (context, a1, a2) {
+          return null;
+        });
   }
 }

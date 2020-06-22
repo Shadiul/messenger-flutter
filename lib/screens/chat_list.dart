@@ -89,8 +89,6 @@ class ConversationsStream extends StatelessWidget {
           );
         }
 
-        print(snapshot.data.documents);
-
         _database
             .reference()
             .child('Users')

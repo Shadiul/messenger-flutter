@@ -2,14 +2,12 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:messenger/screens/all_users_screen.dart';
 import 'package:messenger/screens/chat_list.dart';
-import 'package:messenger/screens/chat_screen.dart';
 import 'package:messenger/screens/profile_screen.dart';
 import 'package:messenger/screens/settings_screen.dart';
 import 'package:messenger/screens/welcome_screen.dart';
@@ -19,8 +17,6 @@ import 'package:messenger/screens/requests_screen.dart';
 FirebaseUser loggedInUser;
 final _auth = FirebaseAuth.instance;
 Firestore _firestore = Firestore.instance;
-
-DatabaseReference _firebaseRef;
 
 class MainScreen extends StatefulWidget {
   static const String id = 'main_screen';

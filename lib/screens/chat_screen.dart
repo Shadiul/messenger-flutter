@@ -84,7 +84,7 @@ class _ChatScreenState extends State<ChatScreen> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 8.0),
             child: Hero(
-              tag: 'profileAvatar',
+              tag: widget.receiverID,
               child: CircleAvatar(
                 backgroundColor: active != null && active
                     ? Colors.green.shade400

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:messenger/screens/chat_screen.dart';
 import 'package:messenger/screens/login_screen.dart';
 import 'package:messenger/screens/main_screen.dart';
 import 'package:messenger/screens/registration_screen.dart';
