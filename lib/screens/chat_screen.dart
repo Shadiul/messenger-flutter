@@ -129,7 +129,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                   );
                 }
-                checkActive(widget.receiverID);
+                // checkActive(widget.receiverID);
                 final messages = snapshot.data.documents.reversed;
                 List<MessageBubble> messageBubbles = [];
                 for (var message in messages) {

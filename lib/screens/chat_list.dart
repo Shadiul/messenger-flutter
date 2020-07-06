@@ -103,19 +103,22 @@ class ConversationsStream extends StatelessWidget {
 
         final conversations = snapshot.data.documents;
 
-        List<ConversationsCard> conversationsCards = [];
+        List<String> userIds = [];
+        List<String> lastMessages = [];
 
         for (var conversation in conversations) {
           final uid = conversation.documentID;
           final lastMessage = conversation.data['last message'];
-
-          final conversationCard = ConversationsCard(uid, lastMessage);
-          conversationsCards.add(conversationCard);
+          userIds.add(uid);
+          lastMessages.add(lastMessage);
         }
         return Expanded(
-          child: ListView(
+          child: ListView.builder(
+            itemCount: userIds.length,
             padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 0.0),
-            children: conversationsCards,
+            itemBuilder: (context, int index) {
+              return ConversationsCard(userIds[index], lastMessages[index]);
+            },
           ),
         );
       },

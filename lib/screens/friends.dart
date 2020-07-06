@@ -72,7 +72,7 @@ class UsersStream extends StatelessWidget {
             .child('Users')
             .child(loggedInUser.uid)
             .onDisconnect()
-            .set({'active': false});
+            .set({'active': false, 'last online': ServerValue.timestamp});
         _firebaseRef
             .reference()
             .child('Users')
@@ -81,17 +81,21 @@ class UsersStream extends StatelessWidget {
 
         final friends = snapshot.data.documents;
 
-        List<FriendsCard> friendsCards = [];
+        List<String> userIds = [];
 
         for (var friend in friends) {
           final uid = friend.documentID;
-          final friendsCard = FriendsCard(uid);
-          friendsCards.add(friendsCard);
+          userIds.add(uid);
         }
+
         return Expanded(
-          child: ListView(
+          child: ListView.builder(
+            physics: AlwaysScrollableScrollPhysics(),
+            itemCount: userIds.length,
             padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 0.0),
-            children: friendsCards,
+            itemBuilder: (context, int index) {
+              return FriendsCard(userIds[index]);
+            },
           ),
         );
       },
@@ -115,11 +119,11 @@ class _FriendsCardState extends State<FriendsCard> {
         .child('Users')
         .child(uid)
         .child('active')
-        .onValue
-        .listen((event) {
-      if (this.mounted) {
+        .once()
+        .then((DataSnapshot dataSnapshot) {
+      if (mounted) {
         setState(() {
-          active = event.snapshot.value;
+          active = dataSnapshot.value;
         });
       }
     });
@@ -140,6 +144,7 @@ class _FriendsCardState extends State<FriendsCard> {
         final profileImage = user['profile'];
         final status = user['status'];
         final uid = user['user_id'];
+
         checkActive(uid);
 
         return UserListCard(
